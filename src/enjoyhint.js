@@ -48,6 +48,10 @@ var EnjoyHint = function (_options) {
 
                 nextStep();
             },
+            onPrevClick: function () {
+
+                prevStep();
+            },
 
             onSkipClick: function () {
 
@@ -72,10 +76,13 @@ var EnjoyHint = function (_options) {
     that.clear = function(){
 
         var $nextBtn = $('.enjoyhint_next_btn');
+        var $prevBtn = $('.enjoyhint_prev_btn');
         var $skipBtn = $('.enjoyhint_skip_btn');
 
         $nextBtn.removeClass(that.nextUserClass);
         $nextBtn.text("Next");
+        $prevBtn.removeClass(that.prevUserClass);
+        $prevBtn.text("Previous");
         $skipBtn.removeClass(that.skipUserClass);
         $skipBtn.text("Skip");
     };
@@ -166,6 +173,14 @@ var EnjoyHint = function (_options) {
                     $body.enjoyhint('show_next');
                 }
 
+                if (step_data.showPrev == false || current_step == 0) {
+
+                    $body.enjoyhint('hide_prev');
+                } else {
+
+                    $body.enjoyhint('show_prev');
+                }
+
                 if (step_data.showSkip == false) {
 
                     $body.enjoyhint('hide_skip');
@@ -185,6 +200,15 @@ var EnjoyHint = function (_options) {
                     $nextBtn.addClass(step_data.nextButton.className || "");
                     $nextBtn.text(step_data.nextButton.text || "Next");
                     that.nextUserClass = step_data.nextButton.className;
+                }
+
+                if (step_data.prevButton) {
+
+                    var $prevBtn = $('.enjoyhint_prev_btn');
+
+                    $prevBtn.addClass(step_data.prevButton.className || "");
+                    $prevBtn.text(step_data.prevButton.text || "Previous");
+                    that.prevUserClass = step_data.prevButton.className;
                 }
 
                 if (step_data.skipButton) {
@@ -296,6 +320,13 @@ var EnjoyHint = function (_options) {
         stepAction();
     };
 
+    var prevStep = function () {
+        if (current_step > 0) {
+            current_step--;
+            stepAction();
+        }
+    };
+
     var skipAll = function() {
 
         var step_data = data[current_step];
@@ -373,6 +404,11 @@ var EnjoyHint = function (_options) {
             case 'next':
 
                 nextStep();
+                break;
+
+            case 'prev':
+
+                prevStep();
                 break;
 
             case 'skip':
