@@ -34,17 +34,22 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     onNextClick: function () {
 
                     },
+                    onPrevClick: function () {
+
+                    },
                     onSkipClick: function () {
 
                     },
+                    onCustomClick: function () {
 
+                    },
                     animation_time: 800
                 };
 
                 this.enjoyhint_obj = {};
                 that = this.enjoyhint_obj;
 
-                that.resetComponentStuff = function() {
+                that.resetComponentStuff = function () {
 
                     originalLabelLeft = null;
                     originalLabelTop = null;
@@ -80,6 +85,8 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     skip_btn: 'enjoyhint_skip_btn',
                     close_btn: 'enjoyhint_close_btn',
                     next_btn: 'enjoyhint_next_btn',
+                    prev_btn: 'enjoyhint_prev_btn',
+                    custom_btn: 'enjoyhint_custom_btn',
                     main_canvas: 'enjoyhint_canvas',
                     main_svg: 'enjoyhint_svg',
                     svg_wrapper: 'enjoyhint_svg_wrapper',
@@ -106,21 +113,21 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 
                 that.canvas_size = {
 
-                    w: $(window).width()*1.4,
-                    h: $(window).height()*1.4
+                    w: $(window).width() * 1.4,
+                    h: $(window).height() * 1.4
                 };
 
                 var canvas_id = "enj_canvas";
 
-                that.enjoyhint = $('<div>', {'class': that.cl.enjoy_hint + ' ' + that.cl.svg_transparent}).appendTo($that);
-                that.enjoyhint_svg_wrapper = $('<div>', {'class': that.cl.svg_wrapper + ' ' + that.cl.svg_transparent}).appendTo(that.enjoyhint);
+                that.enjoyhint = $('<div>', { 'class': that.cl.enjoy_hint + ' ' + that.cl.svg_transparent }).appendTo($that);
+                that.enjoyhint_svg_wrapper = $('<div>', { 'class': that.cl.svg_wrapper + ' ' + that.cl.svg_transparent }).appendTo(that.enjoyhint);
                 that.$stage_container = $('<div id="' + that.cl.kinetic_container + '">').appendTo(that.enjoyhint);
                 that.$canvas = $('<canvas id="' + canvas_id + '" width="' + that.canvas_size.w + '" height="' + that.canvas_size.h + '" class="' + that.cl.main_canvas + '">').appendTo(that.enjoyhint);
                 that.$svg = $('<svg width="' + that.canvas_size.w + '" height="' + that.canvas_size.h + '" class="' + that.cl.main_canvas + ' ' + that.cl.main_svg + '">').appendTo(that.enjoyhint_svg_wrapper);
 
                 var defs = $(makeSVG('defs'));
-                var marker = $(makeSVG('marker', {id: "arrowMarker", viewBox: "0 0 36 21", refX: "21", refY: "10", markerUnits: "strokeWidth", orient: "auto", markerWidth: "16", markerHeight: "12"}));
-                var polilyne = $(makeSVG('path', {style: "fill:none; stroke:rgb(255,255,255); stroke-width:2", d: "M0,0 c30,11 30,9 0,20"}));
+                var marker = $(makeSVG('marker', { id: "arrowMarker", viewBox: "0 0 36 21", refX: "21", refY: "10", markerUnits: "strokeWidth", orient: "auto", markerWidth: "16", markerHeight: "12" }));
+                var polilyne = $(makeSVG('path', { style: "fill:none; stroke:rgb(255,255,255); stroke-width:2", d: "M0,0 c30,11 30,9 0,20" }));
 
                 defs.append(marker.append(polilyne)).appendTo(that.$svg);
 
@@ -138,12 +145,12 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     height: that.canvas_size.h
                 });
 
-                var $top_dis_events = $('<div>', {'class': that.cl.disable_events_element}).appendTo(that.enjoyhint);
+                var $top_dis_events = $('<div>', { 'class': that.cl.disable_events_element }).appendTo(that.enjoyhint);
                 var $bottom_dis_events = $top_dis_events.clone().appendTo(that.enjoyhint);
                 var $left_dis_events = $top_dis_events.clone().appendTo(that.enjoyhint);
                 var $right_dis_events = $top_dis_events.clone().appendTo(that.enjoyhint);
 
-                var stopPropagation = function(e) {
+                var stopPropagation = function (e) {
 
                     e.stopImmediatePropagation();
                 };
@@ -155,28 +162,35 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                 $right_dis_events.click(stopPropagation);
 
 
-                that.$skip_btn = $('<div>', {'class': that.cl.skip_btn}).appendTo(that.enjoyhint).html('Skip').click(function (e) {
+                that.$skip_btn = $('<div>', { 'class': that.cl.skip_btn }).appendTo(that.enjoyhint).html('Skip').click(function (e) {
 
                     that.hide();
                     that.options.onSkipClick();
                 });
-                that.$next_btn = $('<div>', {'class': that.cl.next_btn}).appendTo(that.enjoyhint).html('Next').click(function (e) {
+                that.$next_btn = $('<div>', { 'class': that.cl.next_btn }).appendTo(that.enjoyhint).html('Next').click(function (e) {
 
                     that.options.onNextClick();
                 });
+                that.$prev_btn = $('<div>', { 'class': that.cl.prev_btn }).appendTo(that.enjoyhint).html('Previous').click(function (e) {
 
-                that.$close_btn = $('<div>', {'class': that.cl.close_btn}).appendTo(that.enjoyhint).html('').click(function (e) {
+                    that.options.onPrevClick();
+                });
+
+                that.$close_btn = $('<div>', { 'class': that.cl.close_btn }).appendTo(that.enjoyhint).html('').click(function (e) {
 
                     that.hide();
                     that.options.onSkipClick();
                 });
+                that.$custom_btn = $('<div>', { 'class': that.cl.custom_btn }).appendTo(that.enjoyhint).html('Button').click(function (e) {
 
+                    that.options.onCustomClick();
+                });
                 that.$canvas.mousedown(function (e) {
 
-                    $('canvas').css({left: '4000px'});
+                    $('canvas').css({ left: '4000px' });
 
                     var BottomElement = document.elementFromPoint(e.clientX, e.clientY);
-                    $('canvas').css({left: '0px'});
+                    $('canvas').css({ left: '0px' });
 
                     $(BottomElement).click();
 
@@ -216,7 +230,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                 that.layer.add(that.shape);
                 that.kinetic_stage.add(that.layer);
 
-                $(window).on('resize', function() {
+                $(window).on('resize', function () {
 
                     if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
 
@@ -415,6 +429,18 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     that.nextBtn = "show";
                 };
 
+                that.hidePrevBtn = function () {
+
+                    that.$prev_btn.addClass(that.cl.hide);
+                    that.prevBtn = "hide";
+                };
+
+                that.showPrevBtn = function () {
+
+                    that.$prev_btn.removeClass(that.cl.hide);
+                    that.prevBtn = "show";
+                };
+
                 that.hideSkipBtn = function () {
 
                     that.$skip_btn.addClass(that.cl.hide);
@@ -423,6 +449,18 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                 that.showSkipBtn = function () {
 
                     that.$skip_btn.removeClass(that.cl.hide);
+                };
+
+                that.hideCustomBtn = function () {
+
+                    that.$custom_btn.addClass(that.cl.hide);
+                    that.customBtn = "hide";
+                };
+
+                that.showCustomBtn = function () {
+
+                    that.$custom_btn.removeClass(that.cl.hide);
+                    that.customBtn = "show";
                 };
 
                 that.renderCircle = function (data) {
@@ -645,7 +683,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                         $('#enjoyhint_arrpw_line').remove();
 
                         var d = 'M' + x_from + ',' + y_from + ' Q' + control_point_x + ',' + control_point_y + ' ' + x_to + ',' + y_to;
-                        that.$svg.append(makeSVG('path', {style: "fill:none; stroke:rgb(255,255,255); stroke-width:3", 'marker-end': "url(#arrowMarker)", d: d, id: 'enjoyhint_arrpw_line'}));
+                        that.$svg.append(makeSVG('path', { style: "fill:none; stroke:rgb(255,255,255); stroke-width:3", 'marker-end': "url(#arrowMarker)", d: d, id: 'enjoyhint_arrpw_line' }));
                         that.enjoyhint.removeClass(that.cl.svg_transparent);
 
                     }, that.options.animation_time / 2);
@@ -653,7 +691,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 
                 that.getLabelElement = function (data) {
 
-                    return $('<div>', {"class": 'enjoy_hint_label', id: 'enjoyhint_label'})
+                    return $('<div>', { "class": 'enjoy_hint_label', id: 'enjoyhint_label' })
                         .css({
                             'top': data.y + 'px',
                             'left': data.x + 'px'
@@ -685,11 +723,11 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     });
                 };
 
-                (function($) {
+                (function ($) {
 
                     $.event.special.destroyed = {
 
-                        remove: function(o) {
+                        remove: function (o) {
 
                             if (o.handler) {
 
@@ -721,7 +759,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 
                     if (dialog != null) {
 
-                        $(dialog).on('dialogClosing', function() {
+                        $(dialog).on('dialogClosing', function () {
 
                             that.stopFunction();
                             return;
@@ -858,25 +896,48 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                         text: data.text
                     });
 
-                    that.$next_btn.css({
+                    that.$prev_btn.css({
                         left: label_x,
                         top: label_y + label_height + 20
                     });
 
-                    var left_skip = label_x + that.$next_btn.width() + 10;
+                    that.$next_btn.css({
+                        left: label_x + that.$next_btn.width() + 10,
+                        top: label_y + label_height + 20
+                    });
 
-                    if (that.nextBtn == "hide"){
+                    var left_skip = label_x + that.$next_btn.width() + 10 + that.$next_btn.width() + 10;
+
+                    if (that.nextBtn == "hide") {
+
+                        left_skip = label_x + that.$next_btn.width() + 10;
+                    }
+
+                    if (that.prevBtn == "hide") {
+
+                        that.$next_btn.css({
+                            left: label_x,
+                            top: label_y + label_height + 20
+                        });
+                        left_skip = label_x + that.$next_btn.width() + 10;
+                    }
+
+                    if (that.nextBtn == "hide" && that.prevBtn == "hide") {
 
                         left_skip = label_x;
                     }
-
                     that.$skip_btn.css({
                         left: left_skip,
                         top: label_y + label_height + 20
                     });
 
+                    that.$custom_btn.css({
+                        left: left_skip + that.$skip_btn.width() + 30,
+                        top: label_y + label_height + 20
+                    });
+
                     that.$close_btn.css({
-                        right : 10,
+                        right: 10,
                         top: 10
                     });
 
@@ -1052,6 +1113,26 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
             return this;
         },
 
+        hide_prev: function () {
+
+            this.each(function () {
+
+                this.enjoyhint_obj.hidePrevBtn();
+            });
+
+            return this;
+        },
+
+        show_prev: function () {
+
+            this.each(function () {
+
+                this.enjoyhint_obj.showPrevBtn();
+            });
+
+            return this;
+        },
+
         hide_skip: function () {
 
             this.each(function () {
@@ -1067,6 +1148,26 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
             this.each(function () {
 
                 this.enjoyhint_obj.showSkipBtn();
+            });
+
+            return this;
+        },
+
+        hide_custom: function () {
+
+            this.each(function () {
+
+                this.enjoyhint_obj.hideCustomBtn();
+            });
+
+            return this;
+        },
+
+        show_custom: function () {
+
+            this.each(function () {
+
+                this.enjoyhint_obj.showCustomBtn();
             });
 
             return this;
@@ -1103,7 +1204,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
             return this;
         },
 
-        redo_events_near_rect: function(rect) {
+        redo_events_near_rect: function (rect) {
 
             that.disableEventsNearRect({
                 top: rect.top,

@@ -38,9 +38,9 @@ var EnjoyHint = function (_options) {
             $('.enjoyhint').remove();
         }
 
-        $body.css({'overflow':'hidden'});
+        $body.css({ 'overflow': 'hidden' });
 
-        $(document).on("touchmove",lockTouch);
+        $(document).on("touchmove", lockTouch);
 
         $body.enjoyhint({
 
@@ -48,16 +48,23 @@ var EnjoyHint = function (_options) {
 
                 nextStep();
             },
+            onPrevClick: function () {
+
+                prevStep();
+            },
 
             onSkipClick: function () {
 
                 options.onSkip();
                 skipAll();
-            }
+            },
+            onCustomClick: function () {
+
+            },
         });
     };
 
-    var lockTouch = function(e) {
+    var lockTouch = function (e) {
 
         e.preventDefault();
     };
@@ -65,19 +72,26 @@ var EnjoyHint = function (_options) {
     var destroyEnjoy = function () {
 
         $('.enjoyhint').remove();
-        $body.css({'overflow':'auto'});
+        $body.css({ 'overflow': 'auto' });
         $(document).off("touchmove", lockTouch);
     };
 
-    that.clear = function(){
+    that.clear = function () {
 
         var $nextBtn = $('.enjoyhint_next_btn');
+        var $prevBtn = $('.enjoyhint_prev_btn');
         var $skipBtn = $('.enjoyhint_skip_btn');
+        var $customBtn = $('.enjoyhint_custom_btn');
 
         $nextBtn.removeClass(that.nextUserClass);
         $nextBtn.text("Next");
+        $prevBtn.removeClass(that.prevUserClass);
+        $prevBtn.text("Previous");
         $skipBtn.removeClass(that.skipUserClass);
         $skipBtn.text("Skip");
+        $customBtn.removeClass(that.customUserClass);
+        $customBtn.text("Button");
+        $customBtn.removeAttr(that.customUserAttrName);
     };
 
     var stepAction = function () {
@@ -133,7 +147,7 @@ var EnjoyHint = function (_options) {
                 that.clear();
             }, 250);
 
-            $(document.body).scrollTo(step_data.selector, step_data.scrollAnimationSpeed || 250, {offset: -100});
+            $(document.body).scrollTo(step_data.selector, step_data.scrollAnimationSpeed || 250, { offset: -100 });
 
             setTimeout(function () {
 
@@ -166,6 +180,14 @@ var EnjoyHint = function (_options) {
                     $body.enjoyhint('show_next');
                 }
 
+                if (step_data.showPrev == false || current_step == 0) {
+
+                    $body.enjoyhint('hide_prev');
+                } else {
+
+                    $body.enjoyhint('show_prev');
+                }
+
                 if (step_data.showSkip == false) {
 
                     $body.enjoyhint('hide_skip');
@@ -178,6 +200,14 @@ var EnjoyHint = function (_options) {
 
                 }
 
+                if (step_data.showCustom == true) {
+
+                    $body.enjoyhint('show_custom');
+                } else {
+
+                    $body.enjoyhint('hide_custom');
+                }
+
                 if (step_data.nextButton) {
 
                     var $nextBtn = $('.enjoyhint_next_btn');
@@ -187,6 +217,15 @@ var EnjoyHint = function (_options) {
                     that.nextUserClass = step_data.nextButton.className;
                 }
 
+                if (step_data.prevButton) {
+
+                    var $prevBtn = $('.enjoyhint_prev_btn');
+
+                    $prevBtn.addClass(step_data.prevButton.className || "");
+                    $prevBtn.text(step_data.prevButton.text || "Previous");
+                    that.prevUserClass = step_data.prevButton.className;
+                }
+
                 if (step_data.skipButton) {
 
                     var $skipBtn = $('.enjoyhint_skip_btn');
@@ -194,6 +233,17 @@ var EnjoyHint = function (_options) {
                     $skipBtn.addClass(step_data.skipButton.className || "");
                     $skipBtn.text(step_data.skipButton.text || "Skip");
                     that.skipUserClass = step_data.skipButton.className;
+                }
+
+                if (step_data.customButton) {
+
+                    var $customBtn = $('.enjoyhint_custom_btn');
+
+                    $customBtn.addClass(step_data.customButton.className || "");
+                    $customBtn.text(step_data.customButton.text || "Button");
+                    $customBtn.attr(step_data.customButton.attrName || "", step_data.customButton.attrValue || "");
+                    that.customUserClass = step_data.customButton.className;
+                    that.customUserAttrName = step_data.customButton.attrName;
                 }
 
                 if (step_data.event_type) {
@@ -290,13 +340,20 @@ var EnjoyHint = function (_options) {
         }, timeout);
     };
 
-    var nextStep = function() {
+    var nextStep = function () {
 
         current_step++;
         stepAction();
     };
 
-    var skipAll = function() {
+    var prevStep = function () {
+        if (current_step > 0) {
+            current_step--;
+            stepAction();
+        }
+    };
+
+    var skipAll = function () {
 
         var step_data = data[current_step];
         var $element = $(step_data.selector);
@@ -325,7 +382,7 @@ var EnjoyHint = function (_options) {
 
     /********************* PUBLIC METHODS ***************************************/
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
 
         if ($event_element != null) {
 
@@ -333,12 +390,12 @@ var EnjoyHint = function (_options) {
         }
     });
 
-    that.stop = function() {
+    that.stop = function () {
 
         skipAll();
     };
 
-    that.reRunScript = function(cs) {
+    that.reRunScript = function (cs) {
 
         current_step = cs;
         stepAction();
@@ -356,7 +413,7 @@ var EnjoyHint = function (_options) {
         stepAction();
     };
 
-    that.setCurrentStep = function(cs) {
+    that.setCurrentStep = function (cs) {
 
         current_step = cs;
     };
@@ -373,6 +430,11 @@ var EnjoyHint = function (_options) {
             case 'next':
 
                 nextStep();
+                break;
+
+            case 'prev':
+
+                prevStep();
                 break;
 
             case 'skip':
