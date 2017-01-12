@@ -562,7 +562,10 @@ var EnjoyHint = function (_options) {
                     close_btn: 'enjoyhint_close_btn',
                     next_btn: 'enjoyhint_next_btn',
                     prev_btn: 'enjoyhint_prev_btn',
+<<<<<<< HEAD
                     custom_btn: 'enjoyhint_custom_btn',
+=======
+>>>>>>> origin/master
                     main_canvas: 'enjoyhint_canvas',
                     main_svg: 'enjoyhint_svg',
                     svg_wrapper: 'enjoyhint_svg_wrapper',
@@ -648,10 +651,17 @@ var EnjoyHint = function (_options) {
                     that.options.onNextClick();
                 });
                 that.$prev_btn = $('<div>', { 'class': that.cl.prev_btn }).appendTo(that.enjoyhint).html('Previous').click(function (e) {
+<<<<<<< HEAD
 
                     that.options.onPrevClick();
                 });
 
+=======
+
+                    that.options.onPrevClick();
+                });
+
+>>>>>>> origin/master
                 that.$close_btn = $('<div>', { 'class': that.cl.close_btn }).appendTo(that.enjoyhint).html('').click(function (e) {
 
                     that.hide();
@@ -1381,6 +1391,7 @@ var EnjoyHint = function (_options) {
                         left: label_x + that.$next_btn.width() + 10,
                         top: label_y + label_height + 20
                     });
+<<<<<<< HEAD
 
                     var left_skip = label_x + that.$next_btn.width() + 10 + that.$next_btn.width() + 10;
 
@@ -1398,6 +1409,25 @@ var EnjoyHint = function (_options) {
                         left_skip = label_x + that.$next_btn.width() + 10;
                     }
 
+=======
+
+                    var left_skip = label_x + that.$next_btn.width() + 10 + that.$next_btn.width() + 10;
+
+                    if (that.nextBtn == "hide") {
+
+                        left_skip = label_x + that.$next_btn.width() + 10;
+                    }
+
+                    if (that.prevBtn == "hide") {
+
+                        that.$next_btn.css({
+                            left: label_x,
+                            top: label_y + label_height + 20
+                        });
+                        left_skip = label_x + that.$next_btn.width() + 10;
+                    }
+
+>>>>>>> origin/master
                     if (that.nextBtn == "hide" && that.prevBtn == "hide") {
 
                         left_skip = label_x;

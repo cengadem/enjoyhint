@@ -86,7 +86,10 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     close_btn: 'enjoyhint_close_btn',
                     next_btn: 'enjoyhint_next_btn',
                     prev_btn: 'enjoyhint_prev_btn',
+<<<<<<< HEAD
                     custom_btn: 'enjoyhint_custom_btn',
+=======
+>>>>>>> origin/master
                     main_canvas: 'enjoyhint_canvas',
                     main_svg: 'enjoyhint_svg',
                     svg_wrapper: 'enjoyhint_svg_wrapper',
@@ -914,7 +917,11 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                     }
 
                     if (that.prevBtn == "hide") {
+<<<<<<< HEAD
 
+=======
+                        
+>>>>>>> origin/master
                         that.$next_btn.css({
                             left: label_x,
                             top: label_y + label_height + 20

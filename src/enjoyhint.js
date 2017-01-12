@@ -353,7 +353,11 @@ var EnjoyHint = function (_options) {
         }
     };
 
+<<<<<<< HEAD
     var skipAll = function () {
+=======
+    var skipAll = function() {
+>>>>>>> origin/master
 
         var step_data = data[current_step];
         var $element = $(step_data.selector);
